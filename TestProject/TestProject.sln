@@ -7,6 +7,8 @@ Project("{DA7A21FA-8162-4350-AD77-A8D1B671F3ED}") = "TestProject", "TestProject\
 EndProject
 Project("{DA7A21FA-8162-4350-AD77-A8D1B671F3ED}") = "SubProject", "SubProject\SubProject.rxproj", "{6C6C75BA-9F7D-45EE-BCEC-42880325BBE6}"
 EndProject
+Project("{DA7A21FA-8162-4350-AD77-A8D1B671F3ED}") = "SubProject2", "SubProject2\SubProject2.rxproj", "{48343BC1-FDBF-4517-9719-6FEAB980DE8A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{6C6C75BA-9F7D-45EE-BCEC-42880325BBE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6C6C75BA-9F7D-45EE-BCEC-42880325BBE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6C6C75BA-9F7D-45EE-BCEC-42880325BBE6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48343BC1-FDBF-4517-9719-6FEAB980DE8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48343BC1-FDBF-4517-9719-6FEAB980DE8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48343BC1-FDBF-4517-9719-6FEAB980DE8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48343BC1-FDBF-4517-9719-6FEAB980DE8A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
