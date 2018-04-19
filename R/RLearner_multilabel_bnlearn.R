@@ -1,5 +1,4 @@
 #' bnlearn wrapper for mlr multi label learner
-#' @export
 
 #' make leaner
 #' 
