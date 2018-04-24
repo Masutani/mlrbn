@@ -2,8 +2,6 @@
 
 #' make leaner
 #' 
-#' @import mlr
-#' @import bnlearn
 #' @export
 makeRLearner.multilabel.bnlearn = function() {
     makeRLearnerMultilabel(
@@ -29,8 +27,6 @@ makeRLearner.multilabel.bnlearn = function() {
 #' @param structuremethod param for bnlearn
 #' @param fitmethod param for bnlearn
 #'
-#' @import mlr
-#' @import bnlearn
 #' @export
 trainLearner.multilabel.bnlearn = function(.learner, .task, .subset, .weights = NULL, structuremethod = "hc", fitmethod = "mle", ...) {
     d = getTaskData(.task, .subset, target.extra = TRUE)
@@ -51,9 +47,6 @@ trainLearner.multilabel.bnlearn = function(.learner, .task, .subset, .weights = 
 #' @param .model trained model
 #' @param .newdata data for prediction
 #' 
-#' @import foreach
-#' @import mlr
-#' @import bnlearn
 #' @export
 predictLearner.multilabel.bnlearn = function(.learner, .model, .newdata,  ...) {
     target = .model$task.desc$target

@@ -3,6 +3,7 @@
 S3method(makeRLearner,multilabel.bnlearn)
 S3method(predictLearner,multilabel.bnlearn)
 S3method(trainLearner,multilabel.bnlearn)
+export(multilabel.ppv1)
 import(bnlearn)
 import(foreach)
 import(mlr)
