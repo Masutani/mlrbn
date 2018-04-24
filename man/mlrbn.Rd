@@ -6,7 +6,7 @@
 \alias{mlrbn-package}
 \title{mlrbn: baysean network library wrapper for mlr.}
 \description{
-This library realize baysean network as a classification model
+This library expose baysean network as a multilabel classification model in mlr
 Currently libraries are supported as follows :
 bnlearn.
 }

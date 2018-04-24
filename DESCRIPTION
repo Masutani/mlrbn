@@ -1,8 +1,8 @@
 Package: mlrbn
-Title: What the Package Does (one line, title case)
+Title: baysean network library wrapper for mlr.
 Version: 0.0.0.9000
 Authors@R: person("Osamu", "Masutani", email = "masutani_itlab@hotmail.co.jp", role = c("aut", "cre"))
-Description: baysean network library wrapper for mlr.
+Description: This library expose baysean network as a multilabel classification model in mlr
 Depends: R (>= 3.3.0)
 License: GPL (>= 2)
 Encoding: UTF-8
