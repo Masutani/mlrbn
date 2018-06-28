@@ -16,12 +16,14 @@ prepareBayesServer <- function(df) {
     network <- createNetworkNoLinks(dfs)
     cat(sprintf("    build dataTable object for %d * %d data\n", nrow(df), ncol(df)))
     dt <- toDataTable(dfs)
+    cat(sprintf("    done \n"))
     return(list(network = network, dt = dt))
 }
 
 
 # structure learning
 trainStructure <- function(network, dt, method) {
+    cat(sprintf("    train structure %d * %d data\n", nrow(df), ncol(df)))
     # structure learning
     switch(method,
            "pc" = { learning = new(PCStructuralLearning); options <- new(PCStructuralLearningOptions) },
@@ -47,6 +49,7 @@ trainStructure <- function(network, dt, method) {
 
 # parameter learning
 trainParam <- function(network, dt) {
+  cat(sprintf("    train parameter %d * %d data\n", nrow(df), ncol(df)))
     learning <- new(ParameterLearning, network, new(RelevanceTreeInferenceFactory))
     options <- new(ParameterLearningOptions)
     dataReaderCommand <- new(DataTableDataReaderCommand, dt)
@@ -66,6 +69,7 @@ trainParam <- function(network, dt) {
 
 # inference for data frame
 inferNetwork <- function(network, df) {
+    cat(sprintf("    infer network with evidence %d * %d data\n", nrow(df), ncol(df)))
     factory <- new(RelevanceTreeInferenceFactory)
     inference <- factory$createInferenceEngine(network)
     variables <- network$getVariables()
@@ -90,6 +94,8 @@ inferNetwork <- function(network, df) {
         queryDistributions$add(targetQuery)
         targetQuery
     })
+    
+    tablesList <- getQueryTables(targetQueries)
 
     qdc <- as.list(queryDistributions)
     results <- data.frame()
@@ -99,16 +105,25 @@ inferNetwork <- function(network, df) {
         evidence <- inference$getEvidence()
         setEvidencesByDataFrame(df[r,], evidence, colvar)
         inference$query(queryOptions, queryOutput)
-        probs <- lapply(targetQueries, function(c) {
-            c$getTable()$get(1L)
+        probs <- lapply(tablesList, function(c) {
+            c$get(1L)
         })
         results <- rbind(results, probs)
+        evidence$clear();
     }
     colnames(results) <- varnames
     return(results)
 
 }
 
+# make accelerator cache of table list of targetQueries 
+getQueryTables = function(targetQueries) {
+  tables <- lapply(targetQueries, function(c) {
+    c$getTable()
+  })
+  return(tables)
+}
+# make accelerator cache of variable contents ordering columns of df 
 getColumnVarTable = function(df,variables) {
   cnames <- colnames(df)
   variableList <- c()
@@ -122,7 +137,7 @@ getColumnVarTable = function(df,variables) {
   }
   return(list(variablesList = variableList , statesList = statesList,statesTypeList = statesTypeList ))
 }
-
+# set evidence for row
 setEvidencesByDataFrame = function(row, evidence, colvar) {
     for( c in 1:length(colvar)) {
         value <- row[[c]]
@@ -154,7 +169,6 @@ getVariableReference = function(network) {
     })
     return(variableReferences)
 }
-
 
 cleanStringColumn <- function(df) {
     cnames <- colnames(df)
@@ -189,7 +203,7 @@ createNetworkNoLinks <- function(df) {
                 var1$setStateValueType(StateValueType$NONE)
                 node = new(Node, var1)
             } else {
-                #next
+                next
             }
         }
         network$getNodes()$add(node)
