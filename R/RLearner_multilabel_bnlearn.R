@@ -42,6 +42,7 @@ trainLearner.multilabel.bnlearn = function(.learner, .task, .subset, .weights = 
     }
     fitted = bn.fit(structure, data, method = fitmethod)
 }
+
 #' predict leaner
 #' @param .learner learner to be used
 #' @param .model trained model

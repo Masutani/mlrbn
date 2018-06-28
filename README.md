@@ -8,4 +8,5 @@ https://mlr-org.github.io/mlr-tutorial/devel/html/index.html
 
 ## supported baysean network libraries
 - bnlearn http://www.bnlearn.com/
-
+- Bayes Server https://www.bayesserver.com
+  (You need appropriate license)

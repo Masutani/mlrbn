@@ -14,6 +14,11 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <SettingsFile>
     </SettingsFile>
+    <ResetReplOnRun>True</ResetReplOnRun>
+    <CommandLineArgs />
+    <RemoteProjectPath>~/</RemoteProjectPath>
+    <TransferFilesFilter>*.r;*.rmd;*.sql;*.md;*.cpp</TransferFilesFilter>
+    <TransferProjectOnRun>True</TransferProjectOnRun>
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
