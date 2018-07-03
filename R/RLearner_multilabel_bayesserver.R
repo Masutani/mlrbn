@@ -49,13 +49,10 @@ trainLearner.multilabel.bayesserver = function(.learner, .task, .subset, .weight
 #' @export
 predictLearner.multilabel.bayesserver = function(.learner, .model, .newdata, ...) {
     target = .model$task.desc$target
-    #dummylabel = matrix(, nrow = nrow(.newdata), ncol = length(target))
-    #colnames(dummylabel) = target
-    #data = cbind(dummylabel, .newdata)
 
     probs <- inferNetwork(.model$learner.model, .newdata)
+    probs <- probs[, target]
 
-    colnames(probs) = target
     param <- .model$learner$par.vals
 
     if (.learner$predict.type == "response") {
