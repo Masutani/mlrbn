@@ -8,9 +8,8 @@ makeRLearner.multilabel.bnlearn = function() {
     cl = "multilabel.bnlearn",
     package = "bnlearn",
     par.set = makeParamSet(
-      makeDiscreteLearnerParam(id = "structuremethod", default = "hc", values = c("hc","tabu")),
-      makeDiscreteLearnerParam(id = "fitmethod", default = "mle", values = c("mle", "bayes")),
-      makeNumericLearnerParam(id = "thresh", default = 1.0, lower = 0)
+      makeDiscreteLearnerParam(id = "structuremethod", default = "hc", values = c("hc", "tabu")),
+      makeDiscreteLearnerParam(id = "fitmethod", default = "mle", values = c("mle", "bayes"))
     ),
     properties = c("numerics", "factors", "prob"),
     name = "bayesian networks classifier by bnlearn",
@@ -58,12 +57,5 @@ predictLearner.multilabel.bnlearn = function(.learner, .model, .newdata,  ...) {
         pred <- predict(.model$learner.model, node = target[i], .newdata, ...)
     }
     colnames(preds) = target
-    param <- .model$learner$par.vals
-
-    if (.learner$predict.type == "response") {
-        pred2 = as.matrix(preds > param$thresh)
-        return(pred2)
-    } else if (.learner$predict.type == "prob") {
-        return(preds)
-    }
+    return(preds)
 }

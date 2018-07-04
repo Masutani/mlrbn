@@ -105,8 +105,8 @@ inferNetwork <- function(network, df) {
         evidence <- inference$getEvidence()
         setEvidencesByDataFrame(df[r,], evidence, colvar)
         inference$query(queryOptions, queryOutput)
-        probs <- lapply(tablesList, function(c) {
-            c$get(1L)
+        probs <- lapply(targetQueries, function(c) {
+            c$getTable()$get(1L)
         })
         results <- rbind(results, probs)
         evidence$clear();
@@ -126,23 +126,23 @@ getQueryTables = function(targetQueries) {
 # make accelerator cache of variable contents ordering columns of df 
 getColumnVarTable = function(df,variables) {
   cnames <- colnames(df)
-  variableList <- c()
+  variablesList <- c()
   statesList <- c()
   statesTypeList <- c()
   for( n in cnames) {
     v <- variables$get(n, TRUE)
-    variableList = c(variableList , v)
+    variablesList = c(variablesList , v)
     statesTypeList = c(statesTypeList , v$getStateValueType())
     statesList = c(statesList, v$getStates())
   }
-  return(list(variablesList = variableList , statesList = statesList,statesTypeList = statesTypeList ))
+  return(list(variablesList = variablesList , statesList = statesList,statesTypeList = statesTypeList ))
 }
 # set evidence for row
 setEvidencesByDataFrame = function(row, evidence, colvar) {
-    for( c in 1:length(colvar)) {
+    for( c in 1:length(row)) {
         value <- row[[c]]
         if (is.null(value) || is.na(value)) next
-        v <- colvar$variableList[[c]]
+        v <- colvar$variablesList[[c]]
         stype <- colvar$statesTypeList[[c]]
         states <- colvar$statesList[[c]]
         if (is.factor(value)) {
