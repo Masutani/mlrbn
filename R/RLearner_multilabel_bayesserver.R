@@ -10,8 +10,7 @@ makeRLearner.multilabel.bayesserver = function() {
     cl = "multilabel.bayesserver",
     package = "bnlearn",
     par.set = makeParamSet(
-      makeDiscreteLearnerParam(id = "structuremethod", default = "pc", values = c("pc", "search", "hierachical", "chow-liu", "tan")),
-      makeNumericLearnerParam(id = "thresh", default = 1.0, lower = 0)
+      makeDiscreteLearnerParam(id = "structuremethod", default = "pc", values = c("pc", "search", "hierachical", "chow-liu", "tan"))
     ),
     properties = c("numerics", "factors", "prob"),
     name = "bayesian networks classifier by BayesServer",
@@ -49,19 +48,9 @@ trainLearner.multilabel.bayesserver = function(.learner, .task, .subset, .weight
 #' @export
 predictLearner.multilabel.bayesserver = function(.learner, .model, .newdata, ...) {
     target = .model$task.desc$target
-    #dummylabel = matrix(, nrow = nrow(.newdata), ncol = length(target))
-    #colnames(dummylabel) = target
-    #data = cbind(dummylabel, .newdata)
 
     probs <- inferNetwork(.model$learner.model, .newdata)
+    probs <- probs[, target]
 
-    colnames(probs) = target
-    param <- .model$learner$par.vals
-
-    if (.learner$predict.type == "response") {
-        pred2 = as.matrix(probs > param$thresh)
-        return(pred2)
-    } else if (.learner$predict.type == "prob") {
-        return(as.matrix(probs))
-    }
+    return(as.matrix(probs))
 }
