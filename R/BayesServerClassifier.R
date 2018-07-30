@@ -147,7 +147,7 @@ setEvidencesByDataFrame = function(row, evidence, colvar) {
         states <- colvar$statesList[[c]]
         if (is.factor(value)) {
             value <- as.character(value)
-        }
+        } 
         if (stype == StateValueType$BOOLEAN) {
             s <- states$get(as.character(value))
             evidence$setState(s)
@@ -174,9 +174,6 @@ cleanStringColumn <- function(df) {
     cnames <- colnames(df)
     for (name in cnames) {
         sample <- df[1, name]
-        if (is.numeric(sample)) {
-            df[, name] = as.factor(df[, name])
-        }
         if (is.character(sample)) {
             df[, name] = as.factor(df[, name])
         }
@@ -194,7 +191,7 @@ createNetworkNoLinks <- function(df) {
             var1$setStateValueType(StateValueType$BOOLEAN)
             node = new(Node, var1)
         } else if (is.numeric(sample)) {
-            node = new(Node, name, 1L)
+            node = new(Node, name, VariableValueType$CONTINUOUS)
         } else if (is.character(sample)) {
             node = new(Node, name, 1L)
         } else if (is.factor(sample)) {
