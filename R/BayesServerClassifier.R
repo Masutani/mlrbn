@@ -90,14 +90,18 @@ inferNetwork <- function(network, df) {
     variableReferences <- getVariableReference(network)
 
     targetQueries = lapply(variables, function(v) {
-        targetQuery <- new(Table, v)
+        if (v$getValueType() == VariableValueType$DISCRETE) {
+            targetQuery <- new(Table, v)
+        } else if (v$getValueType() == VariableValueType$CONTINUOUS) {
+            targetQuery <- new(CLGaussian, v)
+        }
         queryDistributions$add(targetQuery)
         targetQuery
     })
     
-    tablesList <- getQueryTables(targetQueries)
+    # tablesList <- getQueryTables(targetQueries)
+    # qdc <- as.list(queryDistributions)
 
-    qdc <- as.list(queryDistributions)
     results <- data.frame()
     colvar <- getColumnVarTable(df,variables)
     # infer batch
@@ -105,9 +109,16 @@ inferNetwork <- function(network, df) {
         evidence <- inference$getEvidence()
         setEvidencesByDataFrame(df[r,], evidence, colvar)
         inference$query(queryOptions, queryOutput)
+
         probs <- lapply(targetQueries, function(c) {
-            c$getTable()$get(1L)
+            if (c$getClass()$toString() == "class com.bayesserver.Table") {
+                p <- c$getTable()$get(1L)
+            } else if (c$getClass()$toString() == "class com.bayesserver.CLGaussian") {
+                p <- c$getMean(0L, 0L)
+            }
+            p
         })
+
         results <- rbind(results, probs)
         evidence$clear();
     }
@@ -143,17 +154,21 @@ setEvidencesByDataFrame = function(row, evidence, colvar) {
         value <- row[[c]]
         if (is.null(value) || is.na(value)) next
         v <- colvar$variablesList[[c]]
-        stype <- colvar$statesTypeList[[c]]
-        states <- colvar$statesList[[c]]
-        if (is.factor(value)) {
-            value <- as.character(value)
-        } 
-        if (stype == StateValueType$BOOLEAN) {
-            s <- states$get(as.character(value))
-            evidence$setState(s)
-        } else if (stype == StateValueType$NONE) {
-            s <- states$get(value)
-            evidence$setState(s)
+        if (v$getValueType() == VariableValueType$DISCRETE) {
+            stype <- colvar$statesTypeList[[c]]
+            states <- colvar$statesList[[c]]
+            if (is.factor(value)) {
+                value <- as.character(value)
+            }
+            if (stype == StateValueType$BOOLEAN) {
+                s <- states$get(as.character(value))
+                evidence$setState(s)
+            } else if (stype == StateValueType$NONE) {
+                s <- states$get(value)
+                evidence$setState(s)
+            }
+        } else if (v$getValueType() == VariableValueType$CONTINUOUS) {
+            evidence$set(v,new(Double, value))
         }
     }
     return(evidence)
@@ -170,14 +185,9 @@ getVariableReference = function(network) {
     return(variableReferences)
 }
 
+# convert string columns to factor
 cleanStringColumn <- function(df) {
-    cnames <- colnames(df)
-    for (name in cnames) {
-        sample <- df[1, name]
-        if (is.character(sample)) {
-            df[, name] = as.factor(df[, name])
-        }
-    }
+    df <- mutate_if(df, is.character, as.factor)
     return(df)
 }
 
