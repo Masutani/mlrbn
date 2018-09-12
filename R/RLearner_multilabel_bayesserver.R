@@ -12,7 +12,7 @@ makeRLearner.multilabel.bayesserver = function() {
     par.set = makeParamSet(
       makeDiscreteLearnerParam(id = "structuremethod", default = "pc", values = c("pc", "search", "hierachical", "chow-liu", "tan"))
     ),
-    properties = c("numerics", "factors", "prob"),
+    properties = c("numerics", "factors","missings", "prob"),
     name = "bayesian networks classifier by BayesServer",
     short.name = "bayesserver",
     note = ""

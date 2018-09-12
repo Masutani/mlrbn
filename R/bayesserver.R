@@ -27,6 +27,7 @@ Network <- J("com.bayesserver.Network")
 State <- J("com.bayesserver.State")
 StateContext <- J("com.bayesserver.StateContext")
 VariableContext <- J("com.bayesserver.VariableContext")
+StateNotFoundAction <- J("com.bayesserver.data.StateNotFoundAction")
 Node <- J("com.bayesserver.Node")
 
 Variable <- J("com.bayesserver.Variable")
@@ -141,7 +142,11 @@ toDataTable <- function(df) {
 
     for (r in 1:nrow(df)) {
         values <- lapply(df[r,], function(x) {
-            return(toJavaObject(x))
+            if (!is.null(x) & !is.nan(x) & !is.na(x)) {
+                return(toJavaObject(x))
+            } else {
+                return(NULL)
+            }
         })
 
         values <- .jarray(values, contents.class = "java.lang.Object")

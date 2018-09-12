@@ -23,7 +23,7 @@ prepareBayesServer <- function(df) {
 
 # structure learning
 trainStructure <- function(network, dt, method) {
-    cat(sprintf("    train structure %d * %d data\n", nrow(df), ncol(df)))
+    cat(sprintf("    train structure\n"))
     # structure learning
     switch(method,
            "pc" = { learning = new(PCStructuralLearning); options <- new(PCStructuralLearningOptions) },
@@ -36,6 +36,7 @@ trainStructure <- function(network, dt, method) {
     dataReaderCommand <- new(DataTableDataReaderCommand, dt)
 
     variableReferences <- getVariableReference(network)
+
     evidenceReaderCommand <- new(
       DefaultEvidenceReaderCommand,
       dataReaderCommand,
@@ -49,7 +50,7 @@ trainStructure <- function(network, dt, method) {
 
 # parameter learning
 trainParam <- function(network, dt) {
-  cat(sprintf("    train parameter %d * %d data\n", nrow(df), ncol(df)))
+  cat(sprintf("    train parameter\n" ))
     learning <- new(ParameterLearning, network, new(RelevanceTreeInferenceFactory))
     options <- new(ParameterLearningOptions)
     dataReaderCommand <- new(DataTableDataReaderCommand, dt)
@@ -107,6 +108,7 @@ inferNetwork <- function(network, df) {
     # infer batch
     for (r in 1:nrow(df)) {
         evidence <- inference$getEvidence()
+        evidence$clear()
         setEvidencesByDataFrame(df[r,], evidence, colvar)
         inference$query(queryOptions, queryOutput)
 
@@ -134,6 +136,7 @@ getQueryTables = function(targetQueries) {
   })
   return(tables)
 }
+
 # make accelerator cache of variable contents ordering columns of df 
 getColumnVarTable = function(df,variables) {
   cnames <- colnames(df)
@@ -152,7 +155,7 @@ getColumnVarTable = function(df,variables) {
 setEvidencesByDataFrame = function(row, evidence, colvar) {
     for( c in 1:length(row)) {
         value <- row[[c]]
-        if (is.null(value) || is.na(value)) next
+        if (is.null(value) || is.na(value) ) next
         v <- colvar$variablesList[[c]]
         if (v$getValueType() == VariableValueType$DISCRETE) {
             stype <- colvar$statesTypeList[[c]]
@@ -180,7 +183,7 @@ getVariableReference = function(network) {
         isDiscrete <- v$getValueType() == VariableValueType$DISCRETE
         isBoolean <- v$getStateValueType() == StateValueType$BOOLEAN
         columnValueType <- if (isDiscrete && !isBoolean) ColumnValueType$NAME else ColumnValueType$VALUE # ifelse not working
-        return(new(VariableReference, v, columnValueType, v$getName()))
+        return(new(VariableReference, v, columnValueType, v$getName(), StateNotFoundAction$MISSING_VALUE))
     })
     return(variableReferences)
 }
