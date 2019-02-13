@@ -10,3 +10,7 @@ https://mlr-org.github.io/mlr-tutorial/devel/html/index.html
 - bnlearn http://www.bnlearn.com/
 - Bayes Server https://www.bayesserver.com
   (You need appropriate license)
+  
+## additional features
+- extra multilabel measures
+
