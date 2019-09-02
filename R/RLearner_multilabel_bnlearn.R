@@ -8,7 +8,7 @@ makeRLearner.multilabel.bnlearn = function() {
     cl = "multilabel.bnlearn",
     package = "bnlearn",
     par.set = makeParamSet(
-      makeDiscreteLearnerParam(id = "structuremethod", default = "hc", values = c("hc", "tabu")),
+    makeDiscreteLearnerParam(id = "structuremethod", default = "hc", values = c("hc", "tabu", "gs", "iamb", "fast.iamb","inter.iamb")),
       makeDiscreteLearnerParam(id = "fitmethod", default = "mle", values = c("mle", "bayes"))
     ),
     properties = c("numerics", "factors", "prob"),
@@ -38,6 +38,14 @@ trainLearner.multilabel.bnlearn = function(.learner, .task, .subset, .weights = 
         structure = hc(data, blacklist = bl)
     } else if(structuremethod == "tabu") {
         structure = tabu(data, blacklist = bl)
+    } else if (structuremethod == "gs") {
+        structure = gs(data)
+    } else if (structuremethod == "iamb") {
+        structure = iamb(data)
+    } else if (structuremethod == "fast.iamb") {
+        structure = fast.iamb(data, blacklist = bl)
+    } else if (structuremethod == "inter.iamb") {
+        structure = inter.iamb(data, blacklist = bl)
     }
     fitted = bn.fit(structure, data, method = fitmethod)
 }
